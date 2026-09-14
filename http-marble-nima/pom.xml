@@ -9,16 +9,28 @@
     <version>3.12-RC1</version>
   </parent>
 
-  <artifactId>avaje-http-template-nima</artifactId>
-  <name>avaje-http-template-nima</name>
+  <artifactId>avaje-http-marble-nima</artifactId>
+  <name>avaje-http-marble-nima</name>
 
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
     <surefire.useModulePath>false</surefire.useModulePath>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <marble.version>1.11-SNAPSHOT</marble.version>
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>io.avaje</groupId>
+      <artifactId>avaje-http-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.digitalmerce</groupId>
+      <artifactId>marbletemplate</artifactId>
+      <version>${marble.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>io.helidon.webserver</groupId>
       <artifactId>helidon-webserver</artifactId>

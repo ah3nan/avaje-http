@@ -333,8 +333,8 @@ public final class ProcessingContext {
   /** FQN of the engine-neutral view marker (avaje-http-api). */
   public static final String TEMPLATE_VIEW = "io.avaje.http.api.template.TemplateView";
 
-  /** FQN of the Nima template renderer SPI (avaje-http-template-nima). */
-  public static final String TEMPLATE_RENDER = "io.avaje.http.template.nima.TemplateRender";
+  /** FQN of the template renderer SPI (avaje-http-marble-nima). */
+  public static final String TEMPLATE_RENDER = "io.avaje.http.marble.nima.TemplateRender";
 
   /** True when the return type implements {@link #TEMPLATE_VIEW}. */
   public static boolean isTemplateView(TypeMirror mirror) {

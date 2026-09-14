@@ -2,7 +2,8 @@ package org.example.tmpl;
 
 import io.avaje.http.api.Controller;
 import io.avaje.http.api.Get;
-import io.avaje.http.template.nima.TemplateRender;
+import io.avaje.http.marble.nima.TemplateInstance;
+import io.avaje.http.marble.nima.TemplateRender;
 import io.helidon.webserver.http.ServerRequest;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -19,7 +20,7 @@ public class RequestScopedController {
     ServerRequest request;
 
     @Get
-    TestView view() {
-        return new TestView("rs");
+    TemplateInstance view() {
+        return TemplateInstance.of("home").data("name", "rs");
     }
 }

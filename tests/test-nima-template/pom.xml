@@ -30,7 +30,7 @@
     </dependency>
     <dependency>
       <groupId>io.avaje</groupId>
-      <artifactId>avaje-http-template-nima</artifactId>
+      <artifactId>avaje-http-marble-nima</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -43,6 +43,12 @@
       <groupId>io.avaje</groupId>
       <artifactId>avaje-http-helidon-generator</artifactId>
       <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.digitalmerce</groupId>
+      <artifactId>marbletemplate</artifactId>
+      <version>1.11-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
     <dependency>

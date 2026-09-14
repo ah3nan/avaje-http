@@ -2,7 +2,8 @@ package org.example.tmpl;
 
 import io.avaje.http.api.Controller;
 import io.avaje.http.api.Get;
-import io.avaje.http.template.nima.TemplateRender;
+import io.avaje.http.marble.nima.TemplateInstance;
+import io.avaje.http.marble.nima.TemplateRender;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
@@ -14,7 +15,7 @@ public class ManageController {
     TemplateRender renderer;
 
     @Get
-    TestView dashboard() {
-        return new TestView("dash");
+    TemplateInstance dashboard() {
+        return TemplateInstance.of("dash").data("name", "dash");
     }
 }

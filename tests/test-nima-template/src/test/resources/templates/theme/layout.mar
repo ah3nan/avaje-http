@@ -1,0 +1,1 @@
+<!DOCTYPE html><html><head><title>{% block title %}{{title}}{% endblock %}</title></head><body>{% include "header" %}<main>{% block content %}{% endblock %}</main>{% include "footer" %}</body></html>

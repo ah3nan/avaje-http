@@ -58,13 +58,23 @@ class TemplateGeneratorTest {
     }
 
     @Test
+    void templateReturnUsesStringTestClient() throws Exception {
+        compile();
+
+        final var api = Files.readString(Paths.get("target/testAPI/org.example.tmpl.StorefrontControllerTestAPI.txt"));
+        assertThat(api).contains("HttpResponse<String> home();");
+        assertThat(api).contains("HttpResponse<String> frag();");
+        assertThat(api).doesNotContain("HttpResponse<TemplateInstance>");
+    }
+
+    @Test
     void templateViewDoesNotProduceJsonType() throws Exception {
         // avaje-jsonb is not on this module's classpath, so JsonB is off; the meaningful
         // assertion here is that the view type never becomes a JsonType field.
         compile();
 
         final var sf = Files.readString(Paths.get("org/example/tmpl/StorefrontController$Route.java"));
-        assertThat(sf).doesNotContain("TestViewJsonType");
+        assertThat(sf).doesNotContain("TemplateInstanceJsonType");
         assertThat(sf).doesNotContain("jsonb");
     }
 

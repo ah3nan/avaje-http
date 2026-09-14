@@ -2,7 +2,8 @@ package org.example.tmpl;
 
 import io.avaje.http.api.Controller;
 import io.avaje.http.api.Get;
-import io.avaje.http.template.nima.TemplateRender;
+import io.avaje.http.marble.nima.TemplateInstance;
+import io.avaje.http.marble.nima.TemplateRender;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
@@ -14,7 +15,12 @@ public class StorefrontController {
     TemplateRender renderer;
 
     @Get
-    TestView home() {
-        return new TestView("home");
+    TemplateInstance home() {
+        return TemplateInstance.of("home").data("name", "home");
+    }
+
+    @Get("/frag")
+    TemplateInstance frag() {
+        return TemplateInstance.of("frag").block("summary").data("name", "frag");
     }
 }

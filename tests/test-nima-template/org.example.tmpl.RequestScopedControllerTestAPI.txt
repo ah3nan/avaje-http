@@ -1,6 +1,7 @@
 package org.example.tmpl;
 
 import io.avaje.http.api.*;
+import io.avaje.http.marble.nima.TemplateInstance;
 import java.net.http.HttpResponse;
 
 @SuppressWarnings("all")
@@ -9,6 +10,6 @@ import java.net.http.HttpResponse;
 public interface RequestScopedControllerTestAPI {
 
   @Get
-  HttpResponse<TestView> view();
+  HttpResponse<String> view();
 
 }

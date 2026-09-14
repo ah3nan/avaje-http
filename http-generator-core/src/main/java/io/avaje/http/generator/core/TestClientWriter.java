@@ -119,7 +119,9 @@ public class TestClientWriter {
     }
 
     TypeMirror returnType = method.returnType();
-    var isJstache = ProcessingContext.isJstacheTemplate(returnType);
+    // JStache and TemplateView returns are rendered server side, so the test client
+    // receives a rendered String rather than the view model type.
+    var isStringResult = ProcessingContext.isJstacheTemplate(returnType) || method.isTemplate();
 
     // For a contract-first controller the route annotations (@Get, @QueryParam, ...) live on the
     // implemented interface method, not on the controller's @Override - copy them from there.
@@ -135,7 +137,7 @@ public class TestClientWriter {
     }
 
     writer.append(
-        "  HttpResponse<%s> %s(", isJstache ? "String" : returnTypeStr, method.simpleName());
+        "  HttpResponse<%s> %s(", isStringResult ? "String" : returnTypeStr, method.simpleName());
     boolean first = true;
     var methodParams = method.params();
     for (int i = 0; i < methodParams.size(); i++) {

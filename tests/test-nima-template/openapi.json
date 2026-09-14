@@ -24,7 +24,7 @@
 						"content" : {
 							"application/json" : {
 								"schema" : {
-									"$ref" : "#/components/schemas/TestView"
+									"$ref" : "#/components/schemas/TemplateInstance"
 								}
 							}
 						}
@@ -45,7 +45,7 @@
 						"content" : {
 							"application/json" : {
 								"schema" : {
-									"$ref" : "#/components/schemas/TestView"
+									"$ref" : "#/components/schemas/TemplateInstance"
 								}
 							}
 						}
@@ -66,7 +66,70 @@
 						"content" : {
 							"application/json" : {
 								"schema" : {
-									"$ref" : "#/components/schemas/TestView"
+									"$ref" : "#/components/schemas/TemplateInstance"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/sf/frag" : {
+			"get" : {
+				"tags" : [
+					
+				],
+				"summary" : "",
+				"description" : "",
+				"responses" : {
+					"200" : {
+						"description" : "",
+						"content" : {
+							"application/json" : {
+								"schema" : {
+									"$ref" : "#/components/schemas/TemplateInstance"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/theme/fragment" : {
+			"get" : {
+				"tags" : [
+					
+				],
+				"summary" : "",
+				"description" : "",
+				"responses" : {
+					"200" : {
+						"description" : "",
+						"content" : {
+							"application/json" : {
+								"schema" : {
+									"$ref" : "#/components/schemas/TemplateInstance"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/theme/page" : {
+			"get" : {
+				"tags" : [
+					
+				],
+				"summary" : "",
+				"description" : "",
+				"responses" : {
+					"200" : {
+						"description" : "",
+						"content" : {
+							"application/json" : {
+								"schema" : {
+									"$ref" : "#/components/schemas/TemplateInstance"
 								}
 							}
 						}
@@ -77,9 +140,21 @@
 	},
 	"components" : {
 		"schemas" : {
-			"TestView" : {
+			"Object" : {
+				"type" : "object"
+			},
+			"TemplateInstance" : {
 				"properties" : {
-					"name" : {
+					"template" : {
+						"type" : "string"
+					},
+					"model" : {
+						"additionalProperties" : {
+							"$ref" : "#/components/schemas/Object"
+						},
+						"type" : "object"
+					},
+					"block" : {
 						"type" : "string"
 					}
 				},
