@@ -90,7 +90,7 @@ class ControllerWriter extends BaseControllerWriter {
   private List<ControllerMethodWriter> writerMethods() {
     return reader.methods().stream()
       .filter(MethodReader::isWebMethod)
-      .map(it -> new ControllerMethodWriter(it, writer, useJsonB, reader))
+      .map(it -> new ControllerMethodWriter(it, writer, useJsonB, jsonTypes, reader))
       .toList();
   }
 

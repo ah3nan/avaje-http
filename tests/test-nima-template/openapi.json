@@ -32,6 +32,353 @@
 				}
 			}
 		},
+		"/resp/back" : {
+			"get" : {
+				"tags" : [
+					
+				],
+				"summary" : "",
+				"description" : "",
+				"responses" : {
+					"200" : {
+						"description" : "",
+						"content" : {
+							"application/json" : {
+								"schema" : {
+									"$ref" : "#/components/schemas/Response_Void"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/resp/bytes" : {
+			"get" : {
+				"tags" : [
+					
+				],
+				"summary" : "",
+				"description" : "",
+				"responses" : {
+					"200" : {
+						"description" : "",
+						"content" : {
+							"application/json" : {
+								"schema" : {
+									"$ref" : "#/components/schemas/Response_byte[]"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/resp/cookie" : {
+			"get" : {
+				"tags" : [
+					
+				],
+				"summary" : "",
+				"description" : "",
+				"responses" : {
+					"200" : {
+						"description" : "",
+						"content" : {
+							"application/json" : {
+								"schema" : {
+									"$ref" : "#/components/schemas/Response_Void"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/resp/created" : {
+			"get" : {
+				"tags" : [
+					
+				],
+				"summary" : "",
+				"description" : "",
+				"responses" : {
+					"200" : {
+						"description" : "",
+						"content" : {
+							"application/json" : {
+								"schema" : {
+									"$ref" : "#/components/schemas/Response_Product"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/resp/item/{id}" : {
+			"get" : {
+				"tags" : [
+					
+				],
+				"summary" : "",
+				"description" : "",
+				"parameters" : [
+					{
+						"name" : "id",
+						"in" : "path",
+						"required" : true,
+						"schema" : {
+							"format" : "int32",
+							"type" : "integer"
+						}
+					}
+				],
+				"responses" : {
+					"200" : {
+						"description" : "",
+						"content" : {
+							"application/json" : {
+								"schema" : {
+									"$ref" : "#/components/schemas/Response_Product"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/resp/list" : {
+			"get" : {
+				"tags" : [
+					
+				],
+				"summary" : "",
+				"description" : "",
+				"responses" : {
+					"200" : {
+						"description" : "",
+						"content" : {
+							"application/json" : {
+								"schema" : {
+									"$ref" : "#/components/schemas/Response_List_Product"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/resp/nocontent" : {
+			"get" : {
+				"tags" : [
+					
+				],
+				"summary" : "",
+				"description" : "",
+				"responses" : {
+					"200" : {
+						"description" : "",
+						"content" : {
+							"application/json" : {
+								"schema" : {
+									"$ref" : "#/components/schemas/Response_Void"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/resp/notfound" : {
+			"get" : {
+				"tags" : [
+					
+				],
+				"summary" : "",
+				"description" : "",
+				"responses" : {
+					"200" : {
+						"description" : "",
+						"content" : {
+							"application/json" : {
+								"schema" : {
+									"$ref" : "#/components/schemas/Response_Product"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/resp/ok" : {
+			"get" : {
+				"tags" : [
+					
+				],
+				"summary" : "",
+				"description" : "",
+				"responses" : {
+					"200" : {
+						"description" : "",
+						"content" : {
+							"application/json" : {
+								"schema" : {
+									"$ref" : "#/components/schemas/Response_Product"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/resp/redirect" : {
+			"get" : {
+				"tags" : [
+					
+				],
+				"summary" : "",
+				"description" : "",
+				"responses" : {
+					"200" : {
+						"description" : "",
+						"content" : {
+							"application/json" : {
+								"schema" : {
+									"$ref" : "#/components/schemas/Response_Void"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/resp/stream" : {
+			"get" : {
+				"tags" : [
+					
+				],
+				"summary" : "",
+				"description" : "",
+				"responses" : {
+					"200" : {
+						"description" : "",
+						"content" : {
+							"application/json" : {
+								"schema" : {
+									"$ref" : "#/components/schemas/Response_InputStream"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/resp/streaming" : {
+			"get" : {
+				"tags" : [
+					
+				],
+				"summary" : "",
+				"description" : "",
+				"responses" : {
+					"200" : {
+						"description" : "",
+						"content" : {
+							"application/json" : {
+								"schema" : {
+									"$ref" : "#/components/schemas/Response_StreamingOutput"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/resp/text" : {
+			"get" : {
+				"tags" : [
+					
+				],
+				"summary" : "",
+				"description" : "",
+				"responses" : {
+					"200" : {
+						"description" : "",
+						"content" : {
+							"application/json" : {
+								"schema" : {
+									"$ref" : "#/components/schemas/Response_String"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/resp/typed" : {
+			"get" : {
+				"tags" : [
+					
+				],
+				"summary" : "",
+				"description" : "",
+				"responses" : {
+					"200" : {
+						"description" : "",
+						"content" : {
+							"application/json" : {
+								"schema" : {
+									"$ref" : "#/components/schemas/Response_String"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/resp/view" : {
+			"get" : {
+				"tags" : [
+					
+				],
+				"summary" : "",
+				"description" : "",
+				"responses" : {
+					"200" : {
+						"description" : "",
+						"content" : {
+							"application/json" : {
+								"schema" : {
+									"$ref" : "#/components/schemas/Response_TemplateInstance"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/resp/xml" : {
+			"get" : {
+				"tags" : [
+					
+				],
+				"summary" : "",
+				"description" : "",
+				"responses" : {
+					"200" : {
+						"description" : "",
+						"content" : {
+							"application/xml" : {
+								"schema" : {
+									"$ref" : "#/components/schemas/Response_String"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"/rs" : {
 			"get" : {
 				"tags" : [
@@ -140,7 +487,320 @@
 	},
 	"components" : {
 		"schemas" : {
+			"Duration" : {
+				"type" : "object"
+			},
+			"NewCookie" : {
+				"properties" : {
+					"name" : {
+						"type" : "string"
+					},
+					"value" : {
+						"type" : "string"
+					},
+					"path" : {
+						"type" : "string"
+					},
+					"domain" : {
+						"type" : "string"
+					},
+					"maxAge" : {
+						"$ref" : "#/components/schemas/Duration"
+					},
+					"secure" : {
+						"type" : "boolean"
+					},
+					"httpOnly" : {
+						"type" : "boolean"
+					}
+				},
+				"type" : "object"
+			},
 			"Object" : {
+				"type" : "object"
+			},
+			"Product" : {
+				"properties" : {
+					"id" : {
+						"format" : "int64",
+						"type" : "integer"
+					},
+					"name" : {
+						"type" : "string"
+					}
+				},
+				"type" : "object"
+			},
+			"Response_InputStream" : {
+				"properties" : {
+					"status" : {
+						"format" : "int32",
+						"type" : "integer"
+					},
+					"entity" : {
+						"format" : "byte",
+						"type" : "string"
+					},
+					"mediaType" : {
+						"type" : "string"
+					},
+					"headers" : {
+						"additionalProperties" : {
+							"items" : {
+								"type" : "string"
+							},
+							"type" : "array"
+						},
+						"type" : "object"
+					},
+					"cookies" : {
+						"items" : {
+							"$ref" : "#/components/schemas/NewCookie"
+						},
+						"type" : "array"
+					},
+					"refererRedirect" : {
+						"type" : "boolean"
+					}
+				},
+				"type" : "object"
+			},
+			"Response_List_Product" : {
+				"properties" : {
+					"status" : {
+						"format" : "int32",
+						"type" : "integer"
+					},
+					"entity" : {
+						"items" : {
+							"$ref" : "#/components/schemas/Product"
+						},
+						"type" : "array"
+					},
+					"mediaType" : {
+						"type" : "string"
+					},
+					"headers" : {
+						"additionalProperties" : {
+							"items" : {
+								"type" : "string"
+							},
+							"type" : "array"
+						},
+						"type" : "object"
+					},
+					"cookies" : {
+						"items" : {
+							"$ref" : "#/components/schemas/NewCookie"
+						},
+						"type" : "array"
+					},
+					"refererRedirect" : {
+						"type" : "boolean"
+					}
+				},
+				"type" : "object"
+			},
+			"Response_Product" : {
+				"properties" : {
+					"status" : {
+						"format" : "int32",
+						"type" : "integer"
+					},
+					"entity" : {
+						"$ref" : "#/components/schemas/Product"
+					},
+					"mediaType" : {
+						"type" : "string"
+					},
+					"headers" : {
+						"additionalProperties" : {
+							"items" : {
+								"type" : "string"
+							},
+							"type" : "array"
+						},
+						"type" : "object"
+					},
+					"cookies" : {
+						"items" : {
+							"$ref" : "#/components/schemas/NewCookie"
+						},
+						"type" : "array"
+					},
+					"refererRedirect" : {
+						"type" : "boolean"
+					}
+				},
+				"type" : "object"
+			},
+			"Response_StreamingOutput" : {
+				"properties" : {
+					"status" : {
+						"format" : "int32",
+						"type" : "integer"
+					},
+					"entity" : {
+						"$ref" : "#/components/schemas/StreamingOutput"
+					},
+					"mediaType" : {
+						"type" : "string"
+					},
+					"headers" : {
+						"additionalProperties" : {
+							"items" : {
+								"type" : "string"
+							},
+							"type" : "array"
+						},
+						"type" : "object"
+					},
+					"cookies" : {
+						"items" : {
+							"$ref" : "#/components/schemas/NewCookie"
+						},
+						"type" : "array"
+					},
+					"refererRedirect" : {
+						"type" : "boolean"
+					}
+				},
+				"type" : "object"
+			},
+			"Response_String" : {
+				"properties" : {
+					"status" : {
+						"format" : "int32",
+						"type" : "integer"
+					},
+					"entity" : {
+						"type" : "string"
+					},
+					"mediaType" : {
+						"type" : "string"
+					},
+					"headers" : {
+						"additionalProperties" : {
+							"items" : {
+								"type" : "string"
+							},
+							"type" : "array"
+						},
+						"type" : "object"
+					},
+					"cookies" : {
+						"items" : {
+							"$ref" : "#/components/schemas/NewCookie"
+						},
+						"type" : "array"
+					},
+					"refererRedirect" : {
+						"type" : "boolean"
+					}
+				},
+				"type" : "object"
+			},
+			"Response_TemplateInstance" : {
+				"properties" : {
+					"status" : {
+						"format" : "int32",
+						"type" : "integer"
+					},
+					"entity" : {
+						"$ref" : "#/components/schemas/TemplateInstance"
+					},
+					"mediaType" : {
+						"type" : "string"
+					},
+					"headers" : {
+						"additionalProperties" : {
+							"items" : {
+								"type" : "string"
+							},
+							"type" : "array"
+						},
+						"type" : "object"
+					},
+					"cookies" : {
+						"items" : {
+							"$ref" : "#/components/schemas/NewCookie"
+						},
+						"type" : "array"
+					},
+					"refererRedirect" : {
+						"type" : "boolean"
+					}
+				},
+				"type" : "object"
+			},
+			"Response_Void" : {
+				"properties" : {
+					"status" : {
+						"format" : "int32",
+						"type" : "integer"
+					},
+					"entity" : {
+						"$ref" : "#/components/schemas/Void"
+					},
+					"mediaType" : {
+						"type" : "string"
+					},
+					"headers" : {
+						"additionalProperties" : {
+							"items" : {
+								"type" : "string"
+							},
+							"type" : "array"
+						},
+						"type" : "object"
+					},
+					"cookies" : {
+						"items" : {
+							"$ref" : "#/components/schemas/NewCookie"
+						},
+						"type" : "array"
+					},
+					"refererRedirect" : {
+						"type" : "boolean"
+					}
+				},
+				"type" : "object"
+			},
+			"Response_byte[]" : {
+				"properties" : {
+					"status" : {
+						"format" : "int32",
+						"type" : "integer"
+					},
+					"entity" : {
+						"format" : "byte",
+						"type" : "string"
+					},
+					"mediaType" : {
+						"type" : "string"
+					},
+					"headers" : {
+						"additionalProperties" : {
+							"items" : {
+								"type" : "string"
+							},
+							"type" : "array"
+						},
+						"type" : "object"
+					},
+					"cookies" : {
+						"items" : {
+							"$ref" : "#/components/schemas/NewCookie"
+						},
+						"type" : "array"
+					},
+					"refererRedirect" : {
+						"type" : "boolean"
+					}
+				},
+				"type" : "object"
+			},
+			"StreamingOutput" : {
 				"type" : "object"
 			},
 			"TemplateInstance" : {
@@ -158,6 +818,9 @@
 						"type" : "string"
 					}
 				},
+				"type" : "object"
+			},
+			"Void" : {
 				"type" : "object"
 			}
 		}

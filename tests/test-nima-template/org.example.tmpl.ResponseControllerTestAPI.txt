@@ -1,0 +1,64 @@
+package org.example.tmpl;
+
+import io.avaje.http.api.*;
+import io.avaje.http.api.Response;
+import io.avaje.http.api.StreamingOutput;
+import io.avaje.http.marble.nima.TemplateInstance;
+import java.io.InputStream;
+import java.net.http.HttpResponse;
+import java.util.List;
+
+@SuppressWarnings("all")
+@Generated("avaje-http-generator")
+@Client("/resp")
+public interface ResponseControllerTestAPI {
+
+  @Get("/ok")
+  HttpResponse<String> ok();
+
+  @Get("/created")
+  HttpResponse<String> created();
+
+  @Get("/notfound")
+  HttpResponse<String> notFound();
+
+  @Get("/redirect")
+  HttpResponse<String> redirect();
+
+  @Get("/back")
+  HttpResponse<String> back();
+
+  @Get("/nocontent")
+  HttpResponse<String> noContent();
+
+  @Get("/cookie")
+  HttpResponse<String> cookie();
+
+  @Get("/text")
+  HttpResponse<String> text();
+
+  @Get("/bytes")
+  HttpResponse<String> bytes();
+
+  @Get("/stream")
+  HttpResponse<String> stream();
+
+  @Get("/streaming")
+  HttpResponse<String> streaming();
+
+  @Get("/typed")
+  HttpResponse<String> typed();
+
+  @Get("/view")
+  HttpResponse<String> view();
+
+  @Get("/item/{id}")
+  HttpResponse<String> item(int id);
+
+  @Get("/list")
+  HttpResponse<String> list();
+
+  @Get("/xml")
+  HttpResponse<String> xml();
+
+}

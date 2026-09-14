@@ -217,6 +217,7 @@ public interface UType {
         case "java.net.http.HttpResponse":
         case "java.util.concurrent.CompletableFuture":
         case "io.avaje.http.client.HttpCall":
+        case "io.avaje.http.api.Response":
           var first = rawType.indexOf("<") + 1;
           var end = rawType.lastIndexOf(">");
           return rawType.substring(first, end);

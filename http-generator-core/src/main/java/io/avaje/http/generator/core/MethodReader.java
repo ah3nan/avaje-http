@@ -32,6 +32,8 @@ public class MethodReader {
   private final boolean isVoid;
   /** True when the return type implements {@code io.avaje.http.api.template.TemplateView}. */
   private final boolean isTemplate;
+  /** True when the return type is {@code io.avaje.http.api.Response}. */
+  private final boolean isResponse;
   private final List<MethodParam> params = new ArrayList<>();
   private final Javadoc javadoc;
   /** Holds enum Roles that are required for the method. */
@@ -66,6 +68,7 @@ public class MethodReader {
     this.actualParams = actualExecutable == null ? null : actualExecutable.getParameterTypes();
     this.isVoid = element.getReturnType().getKind() == TypeKind.VOID;
     this.isTemplate = !isVoid && isTemplateView(returnType());
+    this.isResponse = !isVoid && ProcessingContext.isResponse(returnType());
     this.methodRoles = Util.findRoles(element);
     this.producesAnnotation =
         findAnnotation(ProducesPrism::getOptionalOn)
@@ -420,6 +423,31 @@ public class MethodReader {
   /** True when the return type implements {@code io.avaje.http.api.template.TemplateView}. */
   public boolean isTemplate() {
     return isTemplate;
+  }
+
+  /** True when the return type is {@code io.avaje.http.api.Response}. */
+  public boolean isResponse() {
+    return isResponse;
+  }
+
+  /**
+   * The entity type of a {@code Response<T>} return, or {@code null} for a raw
+   * {@code Response} / {@code Response<Void>} / non-response method.
+   */
+  public UType responseEntity() {
+    return isResponse ? UType.parse(returnType()).paramRaw() : null;
+  }
+
+  /** True when a {@code Response} return has no entity body. */
+  public boolean responseEntityIsVoid() {
+    final var entity = responseEntity();
+    return entity == null || "java.lang.Void".equals(entity.mainType()) || "void".equals(entity.full());
+  }
+
+  /** True when a {@code Response} entity implements {@code TemplateView}. */
+  public boolean responseEntityIsTemplate() {
+    final var entity = responseEntity();
+    return entity != null && isAssignable2Interface(entity.full(), TEMPLATE_VIEW);
   }
 
   public boolean hasProducesStatus() {

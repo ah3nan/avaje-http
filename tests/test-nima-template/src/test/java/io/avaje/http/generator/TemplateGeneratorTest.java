@@ -61,7 +61,7 @@ class TemplateGeneratorTest {
     void templateReturnUsesStringTestClient() throws Exception {
         compile();
 
-        final var api = Files.readString(Paths.get("target/testAPI/org.example.tmpl.StorefrontControllerTestAPI.txt"));
+        final var api = Files.readString(Paths.get("org.example.tmpl.StorefrontControllerTestAPI.txt"));
         assertThat(api).contains("HttpResponse<String> home();");
         assertThat(api).contains("HttpResponse<String> frag();");
         assertThat(api).doesNotContain("HttpResponse<TemplateInstance>");

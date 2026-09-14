@@ -313,7 +313,7 @@ public final class ControllerReader {
 
   private void initTemplate() {
     for (final MethodReader method : methods) {
-      if (method.isTemplate()) {
+      if (method.isTemplate() || method.responseEntityIsTemplate()) {
         hasTemplate = true;
         break;
       }

@@ -69,11 +69,19 @@ public final class JsonBUtil {
               final var asTypeElement = APContext.asTypeElement(methodReader.returnType());
               if (!methodReader.isVoid()
                   && !methodReader.isTemplate()
+                  && !methodReader.responseEntityIsTemplate()
                   && (asTypeElement == null || !JStachePrism.isPresent(asTypeElement))) {
                 var uType = UType.parse(methodReader.returnType());
                 if ("java.util.concurrent.CompletableFuture".equals(uType.mainType())
                     || "java.util.concurrent.CompletionStage".equals(uType.mainType())) {
                   uType = uType.paramRaw();
+                }
+                if (ProcessingContext.RESPONSE.equals(uType.mainType())) {
+                  // unwrap Response<T> -> T so the entity gets a JsonType
+                  uType = uType.paramRaw();
+                  if (uType == null || isNonJsonEntity(uType)) {
+                    return;
+                  }
                 }
 
                 addToMap.accept(uType);
@@ -81,6 +89,18 @@ public final class JsonBUtil {
             });
 
     return Map.copyOf(jsonTypes);
+  }
+
+  /** Entity kinds a {@code Response} writes directly rather than as JSON. */
+  private static boolean isNonJsonEntity(UType uType) {
+    final var main = uType.mainType();
+    return "java.lang.Void".equals(main)
+        || "java.lang.String".equals(main)
+        || "byte[]".equals(uType.full())
+        || "java.io.InputStream".equals(main)
+        || "io.avaje.http.api.StreamingOutput".equals(main)
+        || "java.util.stream.Stream".equals(main)
+        || ProcessingContext.isAssignable2Interface(uType.full(), ProcessingContext.TEMPLATE_VIEW);
   }
 
   private static void addJsonBodyType(MethodReader methodReader, Consumer<UType> addToMap) {

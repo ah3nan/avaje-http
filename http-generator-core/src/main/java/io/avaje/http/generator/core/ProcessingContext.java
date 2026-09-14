@@ -336,6 +336,9 @@ public final class ProcessingContext {
   /** FQN of the template renderer SPI (avaje-http-marble-nima). */
   public static final String TEMPLATE_RENDER = "io.avaje.http.marble.nima.TemplateRender";
 
+  /** FQN of the response envelope (avaje-http-api). */
+  public static final String RESPONSE = "io.avaje.http.api.Response";
+
   /** True when the return type implements {@link #TEMPLATE_VIEW}. */
   public static boolean isTemplateView(TypeMirror mirror) {
     return mirror != null && isAssignable2Interface(mirror.toString(), TEMPLATE_VIEW);
@@ -344,5 +347,10 @@ public final class ProcessingContext {
   /** True when the given type is assignable to the {@link #TEMPLATE_RENDER} SPI. */
   public static boolean isTemplateRender(String type) {
     return isAssignable2Interface(type, TEMPLATE_RENDER);
+  }
+
+  /** True when the return type is {@link #RESPONSE}. */
+  public static boolean isResponse(TypeMirror mirror) {
+    return mirror != null && RESPONSE.equals(UType.parse(mirror.toString()).mainType());
   }
 }

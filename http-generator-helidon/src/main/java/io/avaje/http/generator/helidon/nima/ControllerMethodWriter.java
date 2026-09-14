@@ -64,15 +64,29 @@ final class ControllerMethodWriter {
   private final ControllerReader reader;
   private final boolean useJstachio;
   private final boolean useTemplate;
+  private final boolean useResponse;
+  private final UType responseEntity;
+  private final boolean responseEntityIsTemplate;
+  private final boolean responseUsesJson;
   private final String templateRenderAccessor;
 
-  ControllerMethodWriter(MethodReader method, Append writer, boolean useJsonB, ControllerReader reader) {
+  ControllerMethodWriter(
+      MethodReader method,
+      Append writer,
+      boolean useJsonB,
+      Map<String, UType> jsonTypes,
+      ControllerReader reader) {
     this.reader = reader;
     this.method = method;
     this.writer = writer;
     this.webMethod = method.webMethod();
     this.useJstachio = ProcessingContext.isJstacheTemplate(method.returnType());
     this.useTemplate = method.isTemplate();
+    this.useResponse = method.isResponse();
+    this.responseEntity = method.responseEntity();
+    this.responseEntityIsTemplate = method.responseEntityIsTemplate();
+    this.responseUsesJson =
+        responseEntity != null && jsonTypes.containsKey(responseEntity.full());
     this.templateRenderAccessor = reader.templateRenderAccessor();
     this.useJsonB = !useJstachio && !useTemplate && useJsonB;
     this.instrumentContext = method.instrumentContext();
@@ -207,7 +221,7 @@ final class ControllerMethodWriter {
       }
     }
 
-    final boolean captureController = useTemplate && requestScoped;
+    final boolean captureController = (useTemplate || useResponse) && requestScoped;
     if (captureController) {
       writer.append("    var target = factory.create(req, res);").eol();
     }
@@ -273,6 +287,10 @@ final class ControllerMethodWriter {
           String receiver = captureController ? "target" : "controller";
           writer.append(indent).append(receiver).append(".").append(templateRenderAccessor).append(".render(req, res, result);").eol();
         }
+        case ResponseMode.Response -> {
+          String receiver = captureController ? "target" : "controller";
+          writeResponseReturn(indent, receiver);
+        }
         case ResponseMode.Jstachio -> {
           var renderer = ProcessingContext.jstacheRenderer(method.returnType());
           writer.append(indent).append("var content = %s(result);", renderer).eol();
@@ -326,6 +344,7 @@ final class ControllerMethodWriter {
     Jstachio,
     Templating,
     Template,
+    Response,
     InputStream,
     StreamingOutput,
     Other
@@ -343,6 +362,9 @@ final class ControllerMethodWriter {
     }
     if (useTemplate) {
       return ResponseMode.Template;
+    }
+    if (useResponse) {
+      return ResponseMode.Response;
     }
     if (producesJson()) {
       return ResponseMode.Json;
@@ -438,6 +460,93 @@ final class ControllerMethodWriter {
     } else {
       writeContextReturn(indent);
     }
+  }
+
+  private void writeResponseReturn(String indent, String receiver) {
+    writer.append(indent).append("res.status(result.status());").eol();
+    writer.append(indent)
+        .append("result.headers().forEach((k, vs) -> vs.forEach(v -> res.headers().add(HeaderNames.create(k), v)));")
+        .eol();
+    writer.append(indent).append("result.cookies().forEach(c -> {").eol();
+    writer.append(indent).append("  var cb = io.helidon.http.SetCookie.builder(c.name(), c.value());").eol();
+    writer.append(indent).append("  if (c.path() != null) cb.path(c.path());").eol();
+    writer.append(indent).append("  if (c.domain() != null) cb.domain(c.domain());").eol();
+    writer.append(indent).append("  if (c.maxAge() != null) cb.maxAge(c.maxAge());").eol();
+    writer.append(indent).append("  if (c.secure()) cb.secure(true);").eol();
+    writer.append(indent).append("  if (c.httpOnly()) cb.httpOnly(true);").eol();
+    writer.append(indent).append("  res.headers().addCookie(cb.build());").eol();
+    writer.append(indent).append("});").eol();
+
+    writer.append(indent).append("if (result.isRefererRedirect()) {").eol();
+    writer.append(indent).append("  res.headers().location(req.headers().referer().orElse(java.net.URI.create(\"/\")));").eol();
+    writer.append(indent).append("}").eol();
+
+    if (method.responseEntityIsVoid()) {
+      writer.append(indent).append("res.send();").eol();
+      return;
+    }
+    writer.append(indent).append("if (result.hasEntity()) {").eol();
+    writer.append(indent).append("  if (result.mediaType() != null) {").eol();
+    writer.append(indent).append("    res.headers().contentType(MediaTypes.create(result.mediaType()));").eol();
+    writer.append(indent).append("  } else {").eol();
+    if (responseEntityIsTemplate) {
+      writer.append(indent).append("    res.headers().contentType(HTML_UTF8);").eol();
+    } else if (method.produces() != null) {
+      writeContextReturn(indent + "    ");
+    } else {
+      writer.append(indent)
+          .append("    res.headers().contentType(MediaTypes.")
+          .append(defaultMediaConstant(responseEntity))
+          .append(");")
+          .eol();
+    }
+    writer.append(indent).append("  }").eol();
+    writeResponseEntity(indent + "  ", receiver);
+    writer.append(indent).append("} else {").eol();
+    writer.append(indent).append("  res.send();").eol();
+    writer.append(indent).append("}").eol();
+  }
+
+  private void writeResponseEntity(String indent, String receiver) {
+    final var main = responseEntity.mainType();
+    if (responseEntityIsTemplate) {
+      writer.append(indent)
+          .append(receiver)
+          .append(".")
+          .append(templateRenderAccessor)
+          .append(".render(req, res, result.entity());")
+          .eol();
+    } else if ("java.lang.String".equals(main) || "byte[]".equals(responseEntity.full())) {
+      writer.append(indent).append("res.send(result.entity());").eol();
+    } else if ("java.io.InputStream".equals(main)) {
+      writer.append(indent).append("try (var in = result.entity()) {").eol();
+      writer.append(indent).append("  in.transferTo(res.outputStream());").eol();
+      writer.append(indent).append("}").eol();
+    } else if ("io.avaje.http.api.StreamingOutput".equals(main)) {
+      writer.append(indent).append("try (var os = res.outputStream()) {").eol();
+      writer.append(indent).append("  result.entity().write(os);").eol();
+      writer.append(indent).append("}").eol();
+    } else if (responseUsesJson) {
+      writer.append(indent).append("%sJsonType.toJson(result.entity(), JsonOutput.of(res));", responseEntity.shortName()).eol();
+    } else {
+      writer.append(indent).append("res.send(result.entity());").eol();
+    }
+  }
+
+  private static String defaultMediaConstant(UType entity) {
+    final var main = entity.mainType();
+    if ("java.lang.String".equals(main)) {
+      return "TEXT_PLAIN";
+    }
+    if ("java.io.InputStream".equals(main)
+        || "io.avaje.http.api.StreamingOutput".equals(main)
+        || "byte[]".equals(entity.full())) {
+      return "APPLICATION_OCTET_STREAM";
+    }
+    if ("java.util.stream.Stream".equals(main)) {
+      return "APPLICATION_STREAM_JSON";
+    }
+    return "APPLICATION_JSON";
   }
 
   private void writeContextReturn(String indent, boolean streaming) {
