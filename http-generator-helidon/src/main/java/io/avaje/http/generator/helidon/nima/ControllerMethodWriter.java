@@ -63,6 +63,8 @@ final class ControllerMethodWriter {
   private final boolean isFilter;
   private final ControllerReader reader;
   private final boolean useJstachio;
+  private final boolean useTemplate;
+  private final String templateRenderAccessor;
 
   ControllerMethodWriter(MethodReader method, Append writer, boolean useJsonB, ControllerReader reader) {
     this.reader = reader;
@@ -70,7 +72,9 @@ final class ControllerMethodWriter {
     this.writer = writer;
     this.webMethod = method.webMethod();
     this.useJstachio = ProcessingContext.isJstacheTemplate(method.returnType());
-    this.useJsonB = !useJstachio && useJsonB;
+    this.useTemplate = method.isTemplate();
+    this.templateRenderAccessor = reader.templateRenderAccessor();
+    this.useJsonB = !useJstachio && !useTemplate && useJsonB;
     this.instrumentContext = method.instrumentContext();
     this.isFilter = webMethod == CoreWebMethod.FILTER;
     if (isFilter) {
@@ -203,6 +207,10 @@ final class ControllerMethodWriter {
       }
     }
 
+    final boolean captureController = useTemplate && requestScoped;
+    if (captureController) {
+      writer.append("    var target = factory.create(req, res);").eol();
+    }
     writer.append("    ");
     if (!method.isVoid()) {
       writer.append("var result = ");
@@ -213,7 +221,7 @@ final class ControllerMethodWriter {
     }
 
     if (requestScoped) {
-      writer.append("factory.create(req, res).");
+      writer.append(captureController ? "target." : "factory.create(req, res).");
     } else {
       writer.append("controller.");
     }
@@ -259,6 +267,11 @@ final class ControllerMethodWriter {
           writeContextReturn(indent);
           writer.append(indent).append("res.send(content);").eol();
 
+        }
+        case ResponseMode.Template -> {
+          writeTemplateContextReturn(indent);
+          String receiver = captureController ? "target" : "controller";
+          writer.append(indent).append(receiver).append(".").append(templateRenderAccessor).append(".render(req, res, result);").eol();
         }
         case ResponseMode.Jstachio -> {
           var renderer = ProcessingContext.jstacheRenderer(method.returnType());
@@ -312,6 +325,7 @@ final class ControllerMethodWriter {
     Json,
     Jstachio,
     Templating,
+    Template,
     InputStream,
     StreamingOutput,
     Other
@@ -326,6 +340,9 @@ final class ControllerMethodWriter {
     }
     if (isStreamingOutput(method.returnType())) {
       return ResponseMode.StreamingOutput;
+    }
+    if (useTemplate) {
+      return ResponseMode.Template;
     }
     if (producesJson()) {
       return ResponseMode.Json;
@@ -413,6 +430,14 @@ final class ControllerMethodWriter {
 
   private void writeContextReturn(String indent) {
     writeContextReturn(indent, false);
+  }
+
+  private void writeTemplateContextReturn(String indent) {
+    if (method.produces() == null) {
+      writer.append(indent).append("res.headers().contentType(HTML_UTF8);").eol();
+    } else {
+      writeContextReturn(indent);
+    }
   }
 
   private void writeContextReturn(String indent, boolean streaming) {

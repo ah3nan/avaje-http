@@ -66,6 +66,10 @@ public final class ControllerReader {
   private boolean docHidden;
   private final boolean hasInstrument;
   private boolean hasJstache;
+  /** Set true when any web method returns a {@code TemplateView}. */
+  private boolean hasTemplate;
+  /** Name of the controller's injected {@code TemplateRender} field/getter. */
+  private String templateRenderAccessor;
 
   public ControllerReader(TypeElement beanType) {
     this(beanType, "");
@@ -297,6 +301,7 @@ public final class ControllerReader {
       }
     }
     deriveIncludeValidation();
+    initTemplate();
     jstacheImport();
     addImports(withSingleton);
   }
@@ -304,6 +309,59 @@ public final class ControllerReader {
   private void deriveIncludeValidation() {
     methodHasValid = anyMethodHasValid();
     hasContentCache = anyMethodHasContentCache();
+  }
+
+  private void initTemplate() {
+    for (final MethodReader method : methods) {
+      if (method.isTemplate()) {
+        hasTemplate = true;
+        break;
+      }
+    }
+    if (!hasTemplate) {
+      return;
+    }
+    templateRenderAccessor = findTemplateRenderAccessor(beanType);
+    if (templateRenderAccessor == null) {
+      ProcessingContext.logError(
+          beanType,
+          "A controller returning a TemplateView must declare a non-private TemplateRender field "
+              + "(or a no-arg method returning TemplateRender), e.g. "
+              + "@Inject @Named(\"storefront\") TemplateRender renderer;");
+    }
+  }
+
+  private String findTemplateRenderAccessor(TypeElement type) {
+    for (final Element element : type.getEnclosedElements()) {
+      final var name = templateRenderAccessor(element);
+      if (name != null) {
+        return name;
+      }
+    }
+    final TypeMirror superclass = type.getSuperclass();
+    if (superclass.getKind() != TypeKind.NONE) {
+      final TypeElement superElement = asElement(superclass);
+      if (!"java.lang.Object".equals(superElement.getQualifiedName().toString())) {
+        return findTemplateRenderAccessor(superElement);
+      }
+    }
+    return null;
+  }
+
+  private static String templateRenderAccessor(Element element) {
+    if (element.getModifiers().contains(Modifier.PRIVATE)) {
+      return null;
+    }
+    if (element.getKind() == ElementKind.FIELD
+        && ProcessingContext.isTemplateRender(element.asType().toString())) {
+      return element.getSimpleName().toString();
+    }
+    if (element.getKind() == ElementKind.METHOD
+        && ((ExecutableElement) element).getParameters().isEmpty()
+        && ProcessingContext.isTemplateRender(((ExecutableElement) element).getReturnType().toString())) {
+      return element.getSimpleName().toString();
+    }
+    return null;
   }
 
   private boolean anyMethodHasValid() {
@@ -479,6 +537,16 @@ public final class ControllerReader {
 
   public boolean hasJstache() {
     return hasJstache;
+  }
+
+  /** True when any web method returns a {@code TemplateView}. */
+  public boolean hasTemplate() {
+    return hasTemplate;
+  }
+
+  /** Name of the controller's injected {@code TemplateRender} field/getter (nullable). */
+  public String templateRenderAccessor() {
+    return templateRenderAccessor;
   }
 
   public static String sanitizeImports(String type) {

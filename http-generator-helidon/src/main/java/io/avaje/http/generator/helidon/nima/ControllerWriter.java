@@ -134,7 +134,7 @@ class ControllerWriter extends BaseControllerWriter {
     if (reader.isIncludeValidator()) {
       writer.append("  private static final HeaderName HEADER_ACCEPT_LANGUAGE = HeaderNames.create(\"Accept-Language\");").eol();
     }
-    if (reader.html() || reader.hasJstache()) {
+    if (reader.html() || reader.hasJstache() || reader.hasTemplate()) {
       writer.append("  private static final io.helidon.common.media.type.MediaType HTML_UTF8 = MediaTypes.create(\"text/html;charset=UTF8\");").eol();
     }
 

@@ -30,6 +30,8 @@ public class MethodReader {
   private final ControllerReader bean;
   private final ExecutableElement element;
   private final boolean isVoid;
+  /** True when the return type implements {@code io.avaje.http.api.template.TemplateView}. */
+  private final boolean isTemplate;
   private final List<MethodParam> params = new ArrayList<>();
   private final Javadoc javadoc;
   /** Holds enum Roles that are required for the method. */
@@ -63,6 +65,7 @@ public class MethodReader {
     this.actualExecutable = actualExecutable;
     this.actualParams = actualExecutable == null ? null : actualExecutable.getParameterTypes();
     this.isVoid = element.getReturnType().getKind() == TypeKind.VOID;
+    this.isTemplate = !isVoid && isTemplateView(returnType());
     this.methodRoles = Util.findRoles(element);
     this.producesAnnotation =
         findAnnotation(ProducesPrism::getOptionalOn)
@@ -412,6 +415,11 @@ public class MethodReader {
 
   public boolean isVoid() {
     return isVoid;
+  }
+
+  /** True when the return type implements {@code io.avaje.http.api.template.TemplateView}. */
+  public boolean isTemplate() {
+    return isTemplate;
   }
 
   public boolean hasProducesStatus() {

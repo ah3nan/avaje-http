@@ -1,5 +1,7 @@
 package io.avaje.http.generator.core;
 
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
@@ -157,13 +159,38 @@ final class RequestFactoryWriter {
     // DI constructor params become @Inject fields on the factory
     for (var param : diConstructorParams) {
       writer.append("  @Inject").eol();
+      writeQualifiers(param);
       writer.append("  %s %s;", shortType(param), param.getSimpleName()).eol().eol();
     }
     // DI inject fields from the controller
     for (var field : reader.diFields()) {
       writer.append("  @Inject").eol();
+      writeQualifiers(field);
       writer.append("  %s %s;", shortType(field), field.getSimpleName()).eol().eol();
     }
+  }
+
+  /**
+   * Copy any qualifier annotations (e.g. {@code @Named} or a custom {@code @Qualifier}) from
+   * the controller field/param to the generated factory field, so DI selects the same bean.
+   */
+  private void writeQualifiers(VariableElement element) {
+    for (var mirror : element.getAnnotationMirrors()) {
+      if (isQualifier(mirror)) {
+        writer.append("  %s", mirror.toString()).eol();
+      }
+    }
+  }
+
+  private static boolean isQualifier(AnnotationMirror mirror) {
+    final var typeElement = (TypeElement) mirror.getAnnotationType().asElement();
+    final String fqn = typeElement.getQualifiedName().toString();
+    if ("jakarta.inject.Named".equals(fqn) || "javax.inject.Named".equals(fqn)) {
+      return true;
+    }
+    return typeElement.getAnnotationMirrors().stream()
+        .map(m -> m.getAnnotationType().toString())
+        .anyMatch(a -> a.equals("jakarta.inject.Qualifier") || a.equals("javax.inject.Qualifier"));
   }
 
   private void writeCreateMethod() {

@@ -68,6 +68,7 @@ public final class JsonBUtil {
               }
               final var asTypeElement = APContext.asTypeElement(methodReader.returnType());
               if (!methodReader.isVoid()
+                  && !methodReader.isTemplate()
                   && (asTypeElement == null || !JStachePrism.isPresent(asTypeElement))) {
                 var uType = UType.parse(methodReader.returnType());
                 if ("java.util.concurrent.CompletableFuture".equals(uType.mainType())

@@ -73,6 +73,7 @@
         <module>http-inject-plugin</module>
         <module>htmx-nima</module>
         <module>htmx-nima-jstache</module>
+        <module>http-template-nima</module>
         <module>http-api-vertx</module>
         <module>http-generator-helidon</module>
         <module>http-generator-jex</module>
@@ -86,6 +87,7 @@
         <module>aws-cognito/http-client-authtoken</module>
         <module>htmx-nima</module>
         <module>htmx-nima-jstache</module>
+        <module>http-template-nima</module>
         <module>http-generator-helidon</module>
         <module>tests</module>
       </modules>

@@ -329,4 +329,20 @@ public final class ProcessingContext {
     final var typeElement = APContext.asTypeElement(mirror);
     return typeElement != null && JStachePrism.isPresent(typeElement);
   }
+
+  /** FQN of the engine-neutral view marker (avaje-http-api). */
+  public static final String TEMPLATE_VIEW = "io.avaje.http.api.template.TemplateView";
+
+  /** FQN of the Nima template renderer SPI (avaje-http-template-nima). */
+  public static final String TEMPLATE_RENDER = "io.avaje.http.template.nima.TemplateRender";
+
+  /** True when the return type implements {@link #TEMPLATE_VIEW}. */
+  public static boolean isTemplateView(TypeMirror mirror) {
+    return mirror != null && isAssignable2Interface(mirror.toString(), TEMPLATE_VIEW);
+  }
+
+  /** True when the given type is assignable to the {@link #TEMPLATE_RENDER} SPI. */
+  public static boolean isTemplateRender(String type) {
+    return isAssignable2Interface(type, TEMPLATE_RENDER);
+  }
 }
